@@ -101,7 +101,7 @@
                     * from stories array and the dom
                      * we have to it like this
                     * */
-                    this.$parent.stories.$remove(story)
+                    vm.stories.$remove(story)
                     /*
                      * we have to delete the story from
                      * the server so we will send a DELETE request
@@ -142,10 +142,10 @@
                     * */
                     var vm = this;
                     $.post('/api/stories/', story, function(){
-                        // The best place to fetch again the stories is 
+                        // The best place to fetch again the stories is
                         // after the the new story is successfully stored in the database
-                        
-                        
+
+
                         //Set editing to false to show actions again and hide the form
                         story.editing = false;
                         /*
@@ -167,13 +167,13 @@
                         * Voila! Everything now works as expected
                         * */
                     });
-                    
+
 
                 }
             }
         })
 
-        new Vue({
+        var vm = new Vue({
             el: '#v-app',
             data : {
                 stories: []
@@ -214,7 +214,7 @@
     .upvote {
         color: #1abc9c;
     }
-    
+
     .downvote {
         color: #e74c3c;
     }
