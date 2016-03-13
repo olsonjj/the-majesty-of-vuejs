@@ -9,13 +9,10 @@
 </head>
 
 <body>
-
     <main>
         <div class="container">
-
             <h1>Stories</h1>
             <div id="v-app">
-
                 <table class="table table-striped">
                     <tr>
                         <th>#</th>
@@ -26,8 +23,6 @@
                     </tr>
                     <tr v-for="story in stories" is="story" :story="story"></tr>
                 </table>
-
-
                 <template id="template-story-raw">
                     <tr>
                         <td>
@@ -54,26 +49,21 @@
                         </td>
                         <td>
                             <div class="btn-group" v-if="!story.editing">
-                                    <button @click="upvote(story)" class="btn btn-primary">Upvote</button>
-                                    <button @click="editStory(story)" class="btn btn-default">Edit</button>
-                                    <button @click="deleteStory(story)" class="btn btn-danger">Delete</button>
+                                <button @click="upvoteStory(story)" class="btn btn-primary">Upvote</button>
+                                <button @click="editStory(story)" class="btn btn-default">Edit</button>
+                                <button @click="deleteStory(story)" class="btn btn-danger">Delete</button>
                             </div>
                             <div class="btn-group" v-else>
-                                <!--If the story is an old one then we want to update it
-                                TIP: if the story is taken from the db then it will have an id-->
+                                <!--If the story is taken from the db then it will have an id-->
                                 <button v-if="story.id" class="btn btn-primary" @click="updateStory(story)">Update Story</button>
                                 <!--If the story is new we want to store it-->
                                 <button v-else class="btn btn-success" @click="storeStory(story)">Save New Story</button>
-
-                                <!--always show cancel-->
+                                <!--Always show cancel-->
                                 <button @click="story.editing=false" class="btn btn-default">Cancel</button>
                             </div>
                         </td>
                     </tr>
                 </template>
-
-
-
                 <p class="lead">Here's a list of all your stories.
                     <button @click="createStory()" class="btn btn-primary">Add a new one?</button>
                 </p>
@@ -81,104 +71,47 @@
             </div>
         </div>
     </main>
-
 </body>
-
 </html>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.17/vue.min.js"></script>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.17/vue-resource.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.js"></script>
 <script type="text/javascript">
-//TODO: add a loading until fetch stories finishes
     Vue.component('story',{
             template: '#template-story-raw',
             props: ['story'],
             methods: {
                 deleteStory: function(story){
-                    /*
-                    * this.$remove(story) will only remove the story
-                    * from the dom, in order to remove the story
-                    * from stories array and the dom
-                     * we have to it like this
-                    * */
-                    vm.stories.$remove(story)
-                    /*
-                     * we have to delete the story from
-                     * the server so we will send a DELETE request
-                     *
-                     * I wish I could do $.delete but jQuery has no
-                     * such a method, so I have to use $.ajax
-                     * */
-                    $.ajax({
-                        url: '/api/stories/'+story.id,
-                        type: 'DELETE'
-                    });
+                        this.$parent.stories.$remove(story)
+                        this.$http.delete('/api/stories/'+story.id )
+                    },
+                upvoteStory: function(story){
+                    story.upvotes++;
+                    this.$http.patch('/api/stories/'+story.id , story)
                 },
                 editStory: function(story){
-                    console.log('edit', story.editing)
                     story.editing=true;
-                    console.log('edit', story.editing)
                 },
                 updateStory: function(story){
-                    /*
-                    * Send a PATCH or PUT request to update the story
-                    * to the server too
-                    * PATCH or PUT???? http://restful-api-design.readthedocs.org/en/latest/methods.html
-                    *
-                    * We will use ajax again since there is no $.patch or $.put
-                    * */
-                    $.ajax({
-                        url: '/api/stories/'+story.id,
-                        type: 'PATCH',
-                        data: story
-                    });
-                    //Set editing to false to show actions again and hide the form
+                    this.$http.patch('/api/stories/'+story.id , story)
+                    //Set editing to false to show actions again and hide the inputs
                     story.editing = false;
                 },
                 storeStory: function(story){
-                    /*
-                    * Now i can use jQuery's $.post function
-                    * to send a POST request to the server
-                    * */
-                    var vm = this;
-                    $.post('/api/stories/', story, function(){
-                        // The best place to fetch again the stories is
-                        // after the the new story is successfully stored in the database
-
-
-                        //Set editing to false to show actions again and hide the form
+                    this.$http.post('/api/stories/', story).then(function() {
+                        // After the the new story is stored in the database fetch again all stories
                         story.editing = false;
-                        /*
-                        * After creating and saving a new story try to edit it
-                        * You see that it says 'Save new Story' instead of 'Update Story'???
-                        * Thats beacause we are not fetching the newly created story from the server
-                        * and we have not specified the id.
-                        *
-                        * To solve this we can do two things:
-                        * 1) fetch the newly created story and replace current
-                        * 2) fetch and replace all stories!
-                        * */
-
-                        /*
-                        * So we will have to fetch the stories again after storing a new story
-                        * */
-                        vm.$parent.fetchStories();
-                        /*
-                        * Voila! Everything now works as expected
-                        * */
+                        vm.fetchStories();
                     });
-
-
-                }
+                },
             }
         })
 
-        var vm = new Vue({
+        new Vue({
             el: '#v-app',
             data : {
-                stories: []
+                stories: [],
             },
-
             ready : function(){
                 this.fetchStories()
             },
@@ -187,35 +120,22 @@
                     var newStory={
                         "plot": "",
                         "upvotes": 0,
-                        "downvotes": 0,
                         "editing": true
                     };
                     this.stories.push(newStory);
-
                 },
                 fetchStories: function () {
-                    // fetch stories using vue http helper
-                    // another way to do the same thing
                     var vm = this;
                     this.$http.get('/api/stories')
                         .then(function (response) {
                             // set data on vm
-                            vm.$set('stories', response.data.map(function(story){
+                            var storiesReady = response.data.map(function(story){
                                 story.editing = false;
-                                return story;
-                            }))
+                                return story
+                            })
+                            vm.$set('stories', storiesReady)
                         });
                 },
             }
         });
-
 </script>
-<style type="text/css">
-    .upvote {
-        color: #1abc9c;
-    }
-
-    .downvote {
-        color: #e74c3c;
-    }
-</style>
