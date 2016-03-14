@@ -9,132 +9,133 @@
 </head>
 
 <body>
-    <main>
-        <div class="container">
-            <h1>Stories</h1>
-            <div id="v-app">
-                <table class="table table-striped">
-                    <tr>
-                        <th>#</th>
-                        <th>Plot</th>
-                        <th>Writer</th>
-                        <th>Upvotes</th>
-                        <th>Actions</th>
-                    </tr>
-                    <tr v-for="story in stories" is="story" :story="story"></tr>
-                </table>
-                <template id="template-story-raw">
-                    <tr>
-                        <td>
-                            {{story.id}}
-                        </td>
-                        <td class="col-md-6">
-                            <input v-if="story.editing" v-model="story.plot" class="form-control">
-                            </input>
-                            <!--in other occasions show the story plot-->
+<main>
+    <div class="container">
+        <h1>Stories</h1>
+        <div id="v-app">
+            <table class="table table-striped">
+                <tr>
+                    <th>#</th>
+                    <th>Plot</th>
+                    <th>Writer</th>
+                    <th>Upvotes</th>
+                    <th>Actions</th>
+                </tr>
+                <tr v-for="story in stories" is="story" :story="story"></tr>
+            </table>
+            <template id="template-story-raw">
+                <tr>
+                    <td>
+                        {{story.id}}
+                    </td>
+                    <td class="col-md-6">
+                        <input v-if="story.editing" v-model="story.plot" class="form-control">
+                        </input>
+                        <!--in other occasions show the story plot-->
                             <span v-else>
                                 {{story.plot}}
                             </span>
-                        </td>
-                        <td>
-                            <input v-if="story.editing" v-model="story.writer" class="form-control">
-                            </input>
-                            <!--in other occasions show the story writer-->
+                    </td>
+                    <td>
+                        <input v-if="story.editing" v-model="story.writer" class="form-control">
+                        </input>
+                        <!--in other occasions show the story writer-->
                             <span v-else>
                                 {{story.writer}}
                             </span>
-                        </td>
-                        <td>
-                            {{story.upvotes}}
-                        </td>
-                        <td>
-                            <div class="btn-group" v-if="!story.editing">
-                                <button @click="upvoteStory(story)" class="btn btn-primary">Upvote</button>
-                                <button @click="editStory(story)" class="btn btn-default">Edit</button>
-                                <button @click="deleteStory(story)" class="btn btn-danger">Delete</button>
-                            </div>
-                            <div class="btn-group" v-else>
-                                <!--If the story is taken from the db then it will have an id-->
-                                <button v-if="story.id" class="btn btn-primary" @click="updateStory(story)">Update Story</button>
-                                <!--If the story is new we want to store it-->
-                                <button v-else class="btn btn-success" @click="storeStory(story)">Save New Story</button>
-                                <!--Always show cancel-->
-                                <button @click="story.editing=false" class="btn btn-default">Cancel</button>
-                            </div>
-                        </td>
-                    </tr>
-                </template>
-                <p class="lead">Here's a list of all your stories.
-                    <button @click="createStory()" class="btn btn-primary">Add a new one?</button>
-                </p>
-                <pre>{{ $data | json }}</pre>
-            </div>
+                    </td>
+                    <td>
+                        {{story.upvotes}}
+                    </td>
+                    <td>
+                        <div class="btn-group" v-if="!story.editing">
+                            <button @click="upvoteStory(story)" class="btn btn-primary">Upvote</button>
+                            <button @click="editStory(story)" class="btn btn-default">Edit</button>
+                            <button @click="deleteStory(story)" class="btn btn-danger">Delete</button>
+                        </div>
+                        <div class="btn-group" v-else>
+                            <!--If the story is taken from the db then it will have an id-->
+                            <button v-if="story.id" class="btn btn-primary" @click="updateStory(story)">Update Story
+                            </button>
+                            <!--If the story is new we want to store it-->
+                            <button v-else class="btn btn-success" @click="storeStory(story)">Save New Story</button>
+                            <!--Always show cancel-->
+                            <button @click="story.editing=false" class="btn btn-default">Cancel</button>
+                        </div>
+                    </td>
+                </tr>
+            </template>
+            <p class="lead">Here's a list of all your stories.
+                <button @click="createStory()" class="btn btn-primary">Add a new one?</button>
+            </p>
+            <pre>{{ $data | json }}</pre>
         </div>
-    </main>
+    </div>
+</main>
 </body>
 </html>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.17/vue.min.js"></script>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.js"></script>
 <script type="text/javascript">
-    Vue.component('story',{
-            template: '#template-story-raw',
-            props: ['story'],
-            methods: {
-                deleteStory: function(story){
-                        this.$parent.stories.$remove(story)
-                        this.$http.delete('/api/stories/'+story.id )
-                    },
-                upvoteStory: function(story){
-                    story.upvotes++;
-                    this.$http.patch('/api/stories/'+story.id , story)
-                },
-                editStory: function(story){
-                    story.editing=true;
-                },
-                updateStory: function(story){
-                    this.$http.patch('/api/stories/'+story.id , story)
-                    //Set editing to false to show actions again and hide the inputs
+    Vue.component('story', {
+        template: '#template-story-raw',
+        props: ['story'],
+        methods: {
+            deleteStory: function (story) {
+                this.$parent.stories.$remove(story)
+                this.$http.delete('/api/stories/' + story.id)
+            },
+            upvoteStory: function (story) {
+                story.upvotes++;
+                this.$http.patch('/api/stories/' + story.id, story)
+            },
+            editStory: function (story) {
+                story.editing = true;
+            },
+            updateStory: function (story) {
+                this.$http.patch('/api/stories/' + story.id, story)
+                //Set editing to false to show actions again and hide the inputs
+                story.editing = false;
+            },
+            storeStory: function (story) {
+                this.$http.post('/api/stories/', story).then(function () {
+                    // After the the new story is stored in the database fetch again all stories
                     story.editing = false;
-                },
-                storeStory: function(story){
-                    this.$http.post('/api/stories/', story).then(function() {
-                        // After the the new story is stored in the database fetch again all stories
-                        story.editing = false;
-                        vm.fetchStories();
-                    });
-                },
-            }
-        })
+                    vm.fetchStories();
+                });
+            },
+        }
+    })
 
-        var vm = new Vue({
-            el: '#v-app',
-            data : {
-                stories: [],
+    var vm = new Vue({
+        el: '#v-app',
+        data: {
+            stories: [],
+        },
+        ready: function () {
+            this.fetchStories()
+        },
+        methods: {
+            createStory: function () {
+                var newStory = {
+                    "plot": "",
+                    "upvotes": 0,
+                    "editing": true
+                };
+                this.stories.push(newStory);
             },
-            ready : function(){
-                this.fetchStories()
-            },
-            methods: {
-                createStory: function(){
-                    var newStory={
-                        "plot": "",
-                        "upvotes": 0,
-                        "editing": true
-                    };
-                    this.stories.push(newStory);
-                },
-                fetchStories: function () {
-                    this.$http.get('/api/stories')
+            fetchStories: function () {
+                this.$http.get('/api/stories')
                         .then(function (response) {
                             // set data on vm
-                            var storiesReady = response.data.map(function(story){
+                            var storiesReady = response.data.map(function (story) {
                                 story.editing = false;
                                 return story
                             })
                             vm.$set('stories', storiesReady)
                         });
-                },
-            }
-        });
+            },
+        }
+    });
 </script>
