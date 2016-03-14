@@ -107,7 +107,7 @@
             }
         })
 
-        new Vue({
+        var vm = new Vue({
             el: '#v-app',
             data : {
                 stories: [],
@@ -125,7 +125,6 @@
                     this.stories.push(newStory);
                 },
                 fetchStories: function () {
-                    var vm = this;
                     this.$http.get('/api/stories')
                         .then(function (response) {
                             // set data on vm
