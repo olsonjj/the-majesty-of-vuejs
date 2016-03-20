@@ -20,9 +20,11 @@ Vue.component('story', {
         },
         storeStory: function (story) {
             this.$http.post('/api/stories/', story).then(function (response) {
-                // After the the new story is stored in the database fetch again all stories
-                //vm.fetchStories();
-                //Or Better, update the id of the created story
+                /*
+                After the the new story is stored in the database fetch again all stories with
+                vm.fetchStories();
+                Or Better, update the id of the created story
+                */
                 Vue.set(story, 'id', response.data.id);
 
                 //Set editing to false to show actions again and hide the inputs
