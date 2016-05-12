@@ -4,10 +4,12 @@ class Ninja {
     }
 
     announce() {
-        return `Ninja ${this.name} is here!`;
+        alert(`Ninja ${this.name} is here!`)
+
         // equivalent to:
-        // return 'Ninja turtle ' + this.name + ' is here!';
+        // alert('Ninja turtle ' + this.name + ' is here!')
     }
 }
 
-alert(new Ninja('Leonardo').announce());
+new Ninja('Leonardo').announce();
+
