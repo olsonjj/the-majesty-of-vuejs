@@ -3,23 +3,19 @@ export let pokedex = {
       name: 'Fire',
       pokemons: [{
           level: '06',
-          name: 'Charmander',
-          hungry: true
+          name: 'Charmander'
         },
         {
           level: '12',
-          name: 'Vulpix',
-          hungry: true
+          name: 'Vulpix'
         },
         {
           level: '10',
-          name: 'Magmar',
-          hungry: true
+          name: 'Magmar'
         },
         {
           level: '22',
-          name: 'Cyndaquil',
-          hungry: true
+          name: 'Cyndaquil'
         }
       ]
     },
@@ -27,28 +23,23 @@ export let pokedex = {
       name: 'Water',
       pokemons: [{
           level: '03',
-          name: 'Squirtle',
-          hungry: true
+          name: 'Squirtle'
         },
         {
           level: '45',
-          name: 'Blastoise',
-          hungry: true
+          name: 'Blastoise'
         },
         {
           level: '09',
-          name: 'Staryu',
-          hungry: true
+          name: 'Staryu'
         },
         {
           level: '26',
-          name: 'Gyarados',
-          hungry: true
+          name: 'Gyarados'
         },
         {
           level: '29',
-          name: 'Tentacruel',
-          hungry: true
+          name: 'Tentacruel'
         }
       ]
     },
@@ -56,18 +47,15 @@ export let pokedex = {
       name: 'Electric',
       pokemons: [{
           level: '74',
-          name: 'Pikachu',
-          hungry: true
+          name: 'Pikachu'
         },
         {
           level: '34',
-          name: 'Electabuzz',
-          hungry: true
+          name: 'Electabuzz'
         },
         {
           level: '88',
-          name: 'Zapdos',
-          hungry: true
+          name: 'Zapdos'
         }
       ]
     },
