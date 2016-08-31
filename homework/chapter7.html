@@ -4,29 +4,24 @@
     <title>Paint Me</title>
 </head>
 <!-- binding body style to an object -->
-<body :style="styleObject">
-    <div class="container">
-        <div class="centered">
-            <input type="color" v-model="color"></input>
-            <input v-model="color"></input>
-        </div>
+<body :style="bgColor">
+    <div id="app">
+      <div class="container">
+        <h1>Paint this background!</h1>
+        <input type="color" v-model="bgColor.backgroundColor" />
+      </div>
     </div>
 </body>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.17/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.js"></script>
 <script type="text/javascript">
     new Vue({
-        el: 'body',
-        data: {
-            color: 'black',
-        },
-        computed: {
-            styleObject: function () {
-                return {
-                    'background-color': this.color
-                }
-            }
+      el: 'body',
+      data: {
+        bgColor: {
+          backgroundColor: "#00cc00"
         }
-    })
+      }
+    });
 </script>
 <style type="text/css">
     .centered {
